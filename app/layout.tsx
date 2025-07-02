@@ -5,11 +5,11 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 
-import AOSInit from './aosinit'; 
+import AOSInit from './aosinit';
 
 export const metadata: Metadata = {
-  title: 'My Next.js App',
-  description: 'Landing page created in Next.js',
+  title: 'Land for Sale in Kalapatti | DTCP Approved Plots in Kalapatti – One World',
+  description: 'Explore DTCP approved plots in Kalapatti at One World by Adissia. Premium land for sale near Airport, TIDEL Park & major IT hubs. Ideal for investment & living.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {/* ✅ Initialize AOS */}
         <AOSInit />
 
-      
+
 
         {children}
       </body>
