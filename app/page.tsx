@@ -142,7 +142,7 @@ export default function HomePage() {
                   <div className='col-6'>
                     <div className="stat-box">
                       <h3 className='font-poppins'><b>20 <span className='fs-6'>Mins</span></b></h3>
-                      <p>PSG, GRD Collages</p>
+                      <p>PSG, GRD Colleges</p>
                     </div>
 
                   </div>
