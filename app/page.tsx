@@ -9,48 +9,20 @@ import Faq from './faq';
 import LeadFormSection from './leadformsection';
 import LocationPage from './location';
 import PageWrapper from './pagewrapper';
+import Banner from './banner';
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-white text-gray-900">
-      {/* Hero Section */}
       <PageWrapper>
-      <section id="heroCarousel" className="carousel slide carousel-fade" data-bs-ride="carousel">
-        <div className="carousel-inner">
-          <div className="carousel-item active">
-            <div className="hero-slide d-flex align-items-center justify-content-center text-white text-center bg-2">
-              <div className="overlay position-absolute w-100 h-100 bg-black-overlay" ></div>
-              <div className="container position-relative z-2">
-                <h5 className="text-uppercase text-warning mb-3 robot-text">Gated Living</h5>
-                <h1 className="display-4 fw-bold mb-3 robot-text">Luxury Plots in the Heart of the City</h1>
-                <p className="lead mb-4">Live where convenience meets elegance. Premium plots in a secure community.</p>
-              </div>
-            </div>
-          </div>
-          <div className="carousel-item">
-            <div className="hero-slide d-flex align-items-center justify-content-center text-white text-center bg-1" >
-              <div className="overlay position-absolute w-100 h-100 bg-black-overlay"></div>
-              <div className="container position-relative z-2">
-                <h5 className="text-uppercase text-warning mb-3 robot-text">Future-Ready Locations</h5>
-                <h1 className="display-4 fw-bold mb-3">Invest Where Growth Happens</h1>
-                <p className="lead mb-4">High-return plots in fast-growing areas. Secure your future today.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button className="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-        </button>
-        <button className="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-        </button>
+      <section>
+       <Banner/>
       </section>
-
       {/* overview */}
       <section className='py-3 py-md-5 position-relative'>
         <div className='container'>
           <div className=''>
-            <h1 className='robot-text fs-60px text-center robot-text lh-90px fw-bold' data-aos="fade-up"><span className='text-blue ' >Elevate Your Lifestyle with a Landmark</span><br/> Home in Kalapatti</h1>
+            <h1 className='robot-text fs-60h1 text-center robot-text lh-90px fw-bold' data-aos="fade-up"><span className='text-blue ' >Premium Residential Plots in Kalapatti,<br className='d-none d-md-block'/> Coimbatore</span> One World</h1>
           </div>
           <div className='row mt-md-5 align-items-center yellow-bg animate'>
             <div className='col-md-6 text-align-center'>
@@ -60,9 +32,10 @@ export default function HomePage() {
             </div>
             <div className='col-md-6' data-aos="fade-left">
               <div className=''>
-                <p className='fs-1rem  fs-sm-5 text-secondary font-poppins text-center text-md-start'>With seamless connectivity to tech parks, top schools, hospitals, and the airport, this gated layout is ideal for those looking to build a future-ready home or invest in high-growth land. Each plot comes with clear titles, top-tier infrastructure, and a peaceful community environment.</p>
+                <p className='fs-1rem  fs-sm-5 text-secondary font-poppins text-center text-md-start'>Welcome to One World by Adissia – where smart investment meets peaceful living in Kalapatti, Coimbatore’s most promising real estate corridor. Discover DTCP-approved residential plots for sale in Kalapatti, designed for families, investors, and future homebuilders who value connectivity, growth, and long-term returns. Whether you're buying a plot in Coimbatore for your dream home or securing land as a future-proof asset, One World delivers unmatched value in a fast-growing micro-market.
+</p>
               </div>
-              <div className='mt-4 mb-2 text-center text-md-start'>
+              <div className='mt-4 mb-2 text-center text-md-start' id='contactus'>
                 <a href='#' className='btn-primary  fs-18px font-poppins text-center'>Enquire Now</a>
               </div>
               <div className='mt-4  text-center text-md-start'>
@@ -152,14 +125,14 @@ export default function HomePage() {
                 <div className="stats-boxes mt-4">
                   <div className='col-6'>
                     <div className="stat-box">
-                      <h3><b>2+</b></h3>
-                      <p>Years Experience</p>
+                      <h3 className='font-poppins'><b>7 <span className='fs-6'>Mins</span></b></h3>
+                      <p>SVB Tech Park</p>
                     </div>
                   </div>
                   <div className='col-6'>
                     <div className="stat-box">
-                      <h3><b>50+</b></h3>
-                      <p>Projects Delivered</p>
+                      <h3 className='font-poppins'><b>15 <span className='fs-6'>Mins</span></b></h3>
+                      <p>Kmch, Aravind Hospitals</p>
                     </div>
                   </div>
                 </div>
@@ -168,15 +141,15 @@ export default function HomePage() {
                 <div className="stats-boxes mt-4">
                   <div className='col-6'>
                     <div className="stat-box">
-                      <h3><b>100%</b></h3>
-                      <p>Client Satisfaction</p>
+                      <h3 className='font-poppins'><b>20 <span className='fs-6'>Mins</span></b></h3>
+                      <p>PSG, GRD Collages</p>
                     </div>
 
                   </div>
                   <div className='col-6'>
                     <div className="stat-box">
-                      <h3><b>100%</b></h3>
-                      <p>Client Satisfaction</p>
+                      <h3 className='font-poppins'><b>15 <span className='fs-6'>Mins</span></b></h3>
+                      <p>Broadway Mall</p>
                     </div>
                   </div>
                 </div>
@@ -207,7 +180,7 @@ export default function HomePage() {
                 </div>
               </ul>
               <div className='mt-5 mb-2 text-center text-md-start'>
-                <a href='#' className='btn-primary  fs-18px font-poppins'>Enquire Now</a>
+                <a href='' id='#contactus' className='btn-primary  fs-18px font-poppins'>Enquire Now</a>
               </div>
             </div>
           </div>

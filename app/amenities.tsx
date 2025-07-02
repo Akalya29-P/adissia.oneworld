@@ -47,12 +47,10 @@ export default function AmenitiesSection() {
         {/* Left Content */}
         <div data-aos="fade-right">
           <h1 className="text-5xl font-black text-gray-900 mb-4 text-blue robot-text-style fs-60px text-center text-md-start">
-            <b>Amenities of <span className=""><br className='d-block d-md-none'/> One World</span></b>
+            <b>World-Class Amenities for a Lifestyle of Comfort and Convenience <span className=""><br className='d-block d-md-none'/></span></b>
           </h1>
           <p className="font-poppins text-center text-md-start fs-sm-5">
-            One World is more than just plots — it’s a lifestyle destination. With 30+ thoughtfully curated
-            amenities, enjoy lush gardens, a vibrant kids’ zone, yoga decks, and celebration spaces — all designed
-            to promote wellness, recreation, and community living.
+         One World isn’t just about plots—it’s about lifestyle. Our project is thoughtfully designed with modern infrastructure and community-focused features that enhance living and add long-term value.
           </p>
 
           {/* Arrows */}

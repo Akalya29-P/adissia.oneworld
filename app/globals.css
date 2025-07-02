@@ -1363,11 +1363,11 @@ ul {
 .text1 {
     background: black ;
 }
-.btn-primary{
+.btn-primary {
+    color: #fff !important;
+    background: #1b1851 !important;
+    border: 1px solid #1b1851 !important;
     padding: 10px 30px !important;
-    border: 1px solid #302d61 !important;
-    background: #1b1851e8 !important;
-    color: white !important;
     text-decoration: none !important;
 }
 .text-secondary{ color: #6b6b6b !important;}
@@ -1426,7 +1426,7 @@ ul {
     padding: 35px 20px;
 }
 .border-white{    border: 6px solid #ffffff;}
-.fs-60px{font-size: 60px;}
+.fs-60px{font-size: 50px;}
 .font-poppins{    font-family: Poppins, sans-serif;}
 .border-amenities {
     border: 1px solid #1b1851 !important;
@@ -1517,6 +1517,9 @@ ul {
 .fs-60px {
     font-size: 30px !important;
 }
+.fs-60h1 {
+    font-size: 30px !important;
+}
 .lh-45px{line-height: 27px !important;}
 .fs-18px{
 font-size: 15px !important;}
@@ -1535,6 +1538,12 @@ font-size: 15px !important;}
 }
 .fs-16px{
     font-size: 12px !important;
+}
+.right-6 {
+    right: 15px !important;
+}
+.top-4 {
+    top: 200px !important;
 }
 
 }
@@ -1942,4 +1951,20 @@ font-size: 15px !important;}
 [data-aos] {
   opacity: 0;
   transition-property: transform, opacity;
+}
+.fs-60h1{
+  font-size: 60px;
+}
+.min-vh-75 {
+    min-height: 75vh !important;
+}
+.r-135px{    right: -140px;}
+
+@media screen and (min-width: 1536px) and (max-width: 1600px) {
+.r-135px {
+    right: -30px !important;
+}
+}
+html, body {
+  overflow-x: hidden !important;
 }
