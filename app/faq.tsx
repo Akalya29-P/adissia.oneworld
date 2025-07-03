@@ -4,29 +4,29 @@ import PageWrapper from "./pagewrapper";
 
 const faqs = [
   {
-    question: "What payment methods do you accept for online purchases?",
+    question: "Will Kalapatti benefit from the proposed Coimbatore Metro project?",
     answer:
-      "We accept all major credit cards, PayPal, and Apple Pay for your convenience. Yes, once your order ships, you'll receive a tracking number via email. We also offer a rewards program where you can earn points for every purchase.",
+      "Yes, Kalapatti falls under the planned Metro Phase 1 corridor, boosting future land value and daily connectivity.",
   },
   {
-    question: "How long does shipping usually take?",
+    question: "What IT and tech hubs are developing around One World?",
     answer:
-      "Shipping typically takes 3–5 business days depending on your location.",
+      " The area is surrounded by TIDEL Park, Chil SEZ, KGISL, and new tech parks—making it a fast-growing job and rental zone.",
   },
   {
-    question: "Can I return an item if I’m not satisfied?",
+    question: "What makes One World a safer investment compared to other projects?",
     answer:
-      "Yes, we offer a 15-day return policy on most items. Items must be unused and in original packaging.",
+      "It’s DTCP approved, legally clear, and backed by Adissia—ensuring secure ownership and future-ready development.",
   },
   {
-    question: "Do you offer gift cards?",
+    question: " Are there flexible plot sizes or any early investor benefits?",
     answer:
-      "Yes, digital gift cards are available and can be used for any product on our website.",
+      "Yes, multiple plot sizes are available with early-buyer pricing, pre-launch offers, and first-pick advantage.",
   },
   {
-    question: "Is there a loyalty program for frequent shoppers?",
+    question: "How does Kalapatti’s location influence future resale and ROI potential?",
     answer:
-      "Yes, our loyalty program allows you to earn points on every purchase that can be redeemed later.",
+      "With its airport access and upcoming infrastructure, Kalapatti promises high resale demand and long-term ROI.",
   },
 ];
 

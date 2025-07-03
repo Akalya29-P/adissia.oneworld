@@ -1,4 +1,3 @@
-// app/layout.tsx
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
 
@@ -16,6 +15,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        {/* Fonts & Styles */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -29,13 +29,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           crossOrigin="anonymous"
         />
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+        {/* ✅ Favicon and Icons */}
+        <link rel="icon" href="./favicon.svg" sizes="any" />
+       
+
+        {/* ✅ Open Graph Meta Tags for Social Sharing */}
+        <meta property="og:title" content="Land for Sale in Kalapatti – One World by Adissia" />
+        <meta property="og:description" content="Premium DTCP approved plots near Airport, TIDEL Park & IT hubs." />
+        <meta property="og:image" content="./image/ow-logo.png" />
+        <meta property="og:type" content="website" />
+
       </head>
       <body>
-        {/* ✅ Initialize AOS */}
         <AOSInit />
-
-
-
         {children}
       </body>
     </html>
