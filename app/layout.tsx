@@ -32,13 +32,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
         {/* ✅ Favicon and Icons */}
         <link rel="icon" href="./favicon.svg" sizes="any" />
-       
+
 
         {/* ✅ Open Graph Meta Tags for Social Sharing */}
         <meta property="og:title" content="Land for Sale in Kalapatti – One World by Adissia" />
         <meta property="og:description" content="Premium DTCP approved plots near Airport, TIDEL Park & IT hubs." />
-        <meta property="og:image" content="./image/ow-logo.png" />
+        <meta property="og:image" content="https://oneworld.adissia.com/image/ow-logo.png" />
+        <meta property="og:url" content="https://oneworld.adissia.com" />
         <meta property="og:type" content="website" />
+
 
       </head>
       <body>
