@@ -40,8 +40,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta property="og:image" content="https://oneworld.adissia.com/image/ow-logo.png" />
         <meta property="og:url" content="https://oneworld.adissia.com" />
         <meta property="og:type" content="website" />
-
-
       </head>
       <body>
         <AOSInit />
