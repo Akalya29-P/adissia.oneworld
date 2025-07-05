@@ -77,7 +77,7 @@ export async function POST(req) {
     }
 
     // 3. Submit to Salesforce (GET Method) - No encoding at all
-    const salesforceUrl = `https://adissia--newsbox.sandbox.my.salesforce-sites.com/leadinsert?Name=${name}&countyCode=91&phone=${phone}&email=${email}&source=Website&project=${project}&campaign=Digital Campaign 2025&subCampaign=Meta-landing page`;
+    const salesforceUrl = `https://adissia.my.salesforce-sites.com/leadinsert?Name=${name}&countyCode=91&phone=${phone}&email=${email}&source=Website&project=${project}&campaign=Digital Campaign 2025&subCampaign=Meta-landing page`;
     console.log('🔗 Salesforce URL:', salesforceUrl);
 
     let salesforceResponse = '';
