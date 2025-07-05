@@ -77,7 +77,7 @@ export async function POST(req) {
     }
 
     // 3. Submit to Salesforce (GET Method) - No encoding at all
-    const salesforceUrl = `https://adissia.my.salesforce-sites.com/leadinsert?Name=${name}&countyCode=91&phone=${phone}&email=${email}&source=Website&project=${project}&campaign=Digital Campaign 2025&subCampaign=Meta-landing page`;
+    const salesforceUrl = `https://adissia--newsbox.sandbox.my.salesforce-sites.com/leadinsert?Name=${name}&countyCode=91&phone=${phone}&email=${email}&source=Website&project=${project}&campaign=Digital Campaign 2025&subCampaign=Meta-landing page`;
     console.log('🔗 Salesforce URL:', salesforceUrl);
 
     let salesforceResponse = '';
@@ -88,7 +88,7 @@ export async function POST(req) {
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
       const response = await fetch(salesforceUrl, { 
-        method: 'GET',
+        method: 'POST',
         headers: {
           'User-Agent': 'Adissia-Website/1.0'
         },
