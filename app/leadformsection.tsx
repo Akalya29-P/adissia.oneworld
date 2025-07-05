@@ -27,24 +27,18 @@ export default function LeadFormSection() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Basic validation
     if (!formData.name || !formData.email || !formData.phone || !formData.project || !formData.consent) {
-      alert('Please fill in all fields and provide consent.');
+      alert('Please fill in all fields and give consent.');
       return;
     }
 
     setStatus('loading');
 
     try {
-      const response = await fetch('https://oneworld.adissia.com/api/lead', {
+      const response = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          project: formData.project, // sending as "project" to match the backend
-        }),
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
@@ -63,116 +57,63 @@ export default function LeadFormSection() {
       } else {
         setStatus('error');
       }
-    } catch (error) {
-      console.error('Lead submission failed:', error);
+    } catch (err) {
+      console.error('Form submission error:', err);
       setStatus('error');
     }
   };
 
   return (
     <PageWrapper>
-    <section className='py-6rem bg-pattern-contactus'>
-      <div className='container'>
-        <div className='row'>
-          {/* Left Column */}
-          <div className='col-md-6' data-aos="fade-right">
-            <h1 className='text-blue robot-text-style fs-60px mb-3'>
-              <b>Connect now, own your plot soon</b>
-            </h1>
-            <p className="fs-18px font-poppins">
-              Begin your journey with One World — DTCP & RERA-approved plots near Coimbatore’s top landmarks.
-              A secure, smart investment in a prime location.
-            </p>
-          </div>
-
-          {/* Right Column - Form */}
-          <div className='col-md-6' data-aos="fade-left">
-            <form onSubmit={handleSubmit} className="bg-white border p-4 rounded shadow">
-              <div className="row mb-3">
-                <div className="col-6">
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
+      <section className='py-6rem bg-pattern-contactus'>
+        <div className='container'>
+          <div className='row'>
+            <div className='col-md-6' data-aos="fade-right">
+              <h1 className='text-blue robot-text-style fs-60px mb-3'><b>Connect now, own your plot soon</b></h1>
+              <p className="fs-18px font-poppins">
+                Begin your journey with One World — DTCP & RERA-approved plots near Coimbatore’s top landmarks.
+                A secure, smart investment in a prime location.
+              </p>
+            </div>
+            <div className='col-md-6' data-aos="fade-left">
+              <form onSubmit={handleSubmit} className="bg-white border p-4 rounded shadow">
+                <div className="row mb-3">
+                  <div className="col-6">
+                    <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} className="form-control" required />
+                  </div>
+                  <div className="col-6">
+                    <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="form-control" required />
+                  </div>
                 </div>
-                <div className="col-6">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
+                <div className="row mb-3">
+                  <div className="col-6">
+                    <input type="tel" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} className="form-control" required />
+                  </div>
+                  <div className="col-6">
+                    <select name="project" value={formData.project} onChange={handleChange} className="form-control" required>
+                      <option value="">Select your plot</option>
+                      <option value="One World">One World</option>
+                    </select>
+                  </div>
                 </div>
-              </div>
-
-              <div className="row mb-3">
-                <div className="col-6">
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="form-control"
-                    required
-                  />
+                <div className="form-check mb-3">
+                  <input type="checkbox" name="consent" checked={formData.consent} onChange={handleChange} className="form-check-input" required />
+                  <label className="form-check-label">
+                    I authorize <strong>Adissia Developers</strong> and its representatives to contact me about their products and offers. This consent overrides any DNC/NDNC registration.
+                  </label>
                 </div>
-                <div className="col-6">
-                  <select
-                    name="project"
-                    value={formData.project}
-                    onChange={handleChange}
-                    className="form-control text-muted"
-                    required
-                  >
-                    <option value="">Select your plot</option>
-                    <option value="One World">One World</option>
-                  </select>
-                </div>
-              </div>
+                <button type="submit" className="btn btn-primary px-5 fw-bold" disabled={status === 'loading'}>
+                  {status === 'loading' ? 'Submitting...' : 'Submit'}
+                </button>
 
-              <div className="form-check mb-3">
-                <input
-                  type="checkbox"
-                  name="consent"
-                  checked={formData.consent}
-                  onChange={handleChange}
-                  className="form-check-input"
-                  required
-                />
-                <label className="form-check-label text-sm text-gray-700">
-                  I authorize <strong>Adissia Developers</strong> and its representatives to call,
-                  SMS, email, or WhatsApp me about its products and offers. This consent overrides
-                  any registration for DNC/NDNC.
-                </label>
-              </div>
-
-              <button type="submit" className="btn btn-primary px-5 fw-bold" disabled={status === 'loading'}>
-                {status === 'loading' ? 'Submitting...' : 'Submit'}
-              </button>
-
-              {status === 'success' && (
-                <div className="alert alert-success mt-3">Thank you! Your lead has been submitted.</div>
-              )}
-              {status === 'duplicate' && (
-                <div className="alert alert-warning mt-3">You’ve already submitted today.</div>
-              )}
-              {status === 'error' && (
-                <div className="alert alert-danger mt-3">Something went wrong. Please try again later.</div>
-              )}
-            </form>
+                {status === 'success' && <div className="alert alert-success mt-3">Thank you! Your lead has been submitted.</div>}
+                {status === 'duplicate' && <div className="alert alert-warning mt-3">You’ve already submitted today.</div>}
+                {status === 'error' && <div className="alert alert-danger mt-3">Something went wrong. Please try again later.</div>}
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
     </PageWrapper>
   );
 }
