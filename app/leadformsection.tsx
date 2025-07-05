@@ -36,7 +36,7 @@ export default function LeadFormSection() {
     setStatus('loading');
 
     try {
-      const response = await fetch('/api/lead', {
+      const response = await fetch('app/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
