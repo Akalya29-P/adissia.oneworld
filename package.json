@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-     "export": "next export"
+    "export": "next export"
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",

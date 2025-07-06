@@ -25,29 +25,31 @@ export default function Banner() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!formData.name || !formData.email || !formData.phone || !formData.project || !formData.consent) {
-      alert('Please fill in all fields and provide consent.');
-      return;
-    }
+  if (!formData.name || !formData.email || !formData.phone || !formData.project || !formData.consent) {
+    alert('Please fill in all fields and provide consent.');
+    return;
+  }
 
-    setStatus('loading');
+  setStatus('loading');
 
-    try {
-      const response = await fetch('/api/lead', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          project: formData.project,
-        }),
-      });
+  try {
+    const response = await fetch('/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        project: formData.project,
+      }),
+    });
 
-      const result = await response.json();
+    const result = await response.json();
 
+    // Handle different HTTP status codes
+    if (response.ok) {
       if (result.status === 'success') {
         setStatus('success');
         setFormData({
@@ -57,17 +59,31 @@ export default function Banner() {
           project: '',
           consent: false,
         });
-      } else if (result.status === 'duplicate') {
-        setStatus('duplicate');
       } else {
         setStatus('error');
       }
-    } catch (error) {
-      console.error('Lead submission failed:', error);
+    } else if (response.status === 409) {
+      // Handle 409 Conflict specifically - duplicate submission
+      console.log('409 Conflict detected:', result);
+      setStatus('duplicate');
+    } else if (response.status === 400) {
+      // Handle validation errors
+      console.log('400 Bad Request:', result);
+      setStatus('error');
+    } else if (response.status === 500) {
+      // Handle server errors
+      console.log('500 Server Error:', result);
+      setStatus('error');
+    } else {
+      // Handle any other errors
+      console.log('Other error:', response.status, result);
       setStatus('error');
     }
-  };
-
+  } catch (error) {
+    console.error('Lead submission failed:', error);
+    setStatus('error');
+  }
+};
   return (
     <section className="position-relative overflow-hidden" id='contactus'>
       {/* Banner background */}
