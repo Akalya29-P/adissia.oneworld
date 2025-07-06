@@ -5,7 +5,17 @@ import fs from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-
+// Handle GET request
+export async function GET(req) {
+  return NextResponse.json(
+    {
+      status: 'success',
+      message: 'GET request received successfully!',
+      timestamp: new Date().toISOString(),
+    },
+    { status: 200 }
+  );
+}
 export async function POST(req) {
   try {
     const { name, email, phone, project } = await req.json();
