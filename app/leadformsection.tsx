@@ -77,7 +77,7 @@ export default function LeadFormSection() {
           {/* Left Column */}
           <div className='col-md-6' data-aos="fade-right">
             <h1 className='text-blue robot-text-style fs-60px mb-3'>
-              <b>Connect now, own your plot soon</b>
+              <b>Connect now, own your plot</b>
             </h1>
             <p className="fs-18px font-poppins">
               Begin your journey with One World — DTCP & RERA-approved plots near Coimbatore’s top landmarks.
