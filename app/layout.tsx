@@ -1,20 +1,55 @@
+'use client';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
 
 import type { Metadata } from 'next';
-import { ReactNode } from 'react';
-
+import { ReactNode, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import Script from 'next/script';
 import AOSInit from './aosinit';
 
 export const metadata: Metadata = {
   title: 'Land for Sale in Kalapatti | DTCP Approved Plots in Kalapatti – One World',
-  description: 'Explore DTCP approved plots in Kalapatti at One World by Adissia. Premium land for sale near Airport, TIDEL Park & major IT hubs. Ideal for investment & living.',
+  description:
+    'Explore DTCP approved plots in Kalapatti at One World by Adissia. Premium land for sale near Airport, TIDEL Park & major IT hubs. Ideal for investment & living.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Track page view on route change
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('config', 'G-T865DFSRED', {
+        page_path: pathname,
+      });
+    }
+  }, [pathname]);
+
   return (
     <html lang="en">
       <head>
+        {/* ✅ Google Analytics */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-T865DFSRED"
+        />
+        <Script
+          id="gtag-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-T865DFSRED', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+
         {/* Fonts & Styles */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -30,13 +65,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
         <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
-        {/* ✅ Favicon and Icons */}
+        {/* Favicon */}
         <link rel="icon" href="./favicon.svg" sizes="any" />
 
-
-        {/* ✅ Open Graph Meta Tags for Social Sharing */}
+        {/* Social Meta Tags */}
         <meta property="og:title" content="Land for Sale in Kalapatti – One World by Adissia" />
-        <meta property="og:description" content="Premium DTCP approved plots near Airport, TIDEL Park & IT hubs." />
+        <meta
+          property="og:description"
+          content="Premium DTCP approved plots near Airport, TIDEL Park & IT hubs."
+        />
         <meta property="og:image" content="https://oneworld.adissia.com/image/ow-logo.png" />
         <meta property="og:url" content="https://oneworld.adissia.com" />
         <meta property="og:type" content="website" />

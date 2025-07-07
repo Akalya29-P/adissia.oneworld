@@ -27,12 +27,12 @@ export default function HomePage() {
             <div className='row mt-md-5 align-items-center yellow-bg animate'>
               <div className='col-md-6 text-align-center'>
                 <div className='w-83'>
-                  <h6 className='fs-30px text-md-end robot-text lh-45px text-center mt-3 mt-md-0' data-aos="fade-right">One World by Adissia Developers offers <span className='yellow-bg-wrap'><span className='yellow-bg-text text1'>DTCP-approved villa plots in Kalapatti, Coimbatore’s</span></span> prime residential <br className='d-block d-md-none' /> and IT zone.</h6>
+                  <h6 className='fs-30px text-md-end robot-text lh-45px text-center mt-3 mt-md-0' data-aos="fade-right">One World by Adissia Developers offers <span className='yellow-bg-wrap'><span className='yellow-bg-text text1'>DTCP RERA-approved villa plots in Kalapatti, Coimbatore's</span></span> prime residential <br className='d-block d-md-none' /> and IT zone.</h6>
                 </div>
               </div>
               <div className='col-md-6' data-aos="fade-left">
                 <div className=''>
-                  <p className='fs-1rem  fs-sm-5 text-secondary font-poppins text-center text-md-start'>Welcome to One World by Adissia – where smart investment meets peaceful living in Kalapatti, Coimbatore’s most promising real estate corridor. Discover DTCP-approved residential plots for sale in Kalapatti, designed for families, investors, and future homebuilders who value connectivity, growth, and long-term returns. Whether you're buying a plot in Coimbatore for your dream home or securing land as a future-proof asset, One World delivers unmatched value in a fast-growing micro-market.
+                  <p className='fs-1rem  fs-sm-5 text-secondary font-poppins text-center text-md-start'>Welcome to One World by Adissia – where smart investment meets peaceful living in Kalapatti, Coimbatore's most promising real estate corridor. Discover DTCP-approved residential plots for sale in Kalapatti, designed for families, investors, and future homebuilders who value connectivity, growth, and long-term returns. Whether you're buying a plot in Coimbatore for your dream home or securing land as a future-proof asset, One World delivers unmatched value in a fast-growing micro-market.
                   </p>
                 </div>
                 <div className='mt-4 mb-2 text-center text-md-start' id='contactus'>
@@ -108,7 +108,10 @@ export default function HomePage() {
         <section>
           <AmenitiesSection />
         </section>
-
+        {/* location */}
+        {/*<section>
+          <LocationPage />
+        </section> */}
 
 
         {/* About Section */}
@@ -156,7 +159,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className='col-md-6 ' data-aos="fade-left">
-                <div className='font-poppins mb-4'><p className='text-center text-md-start fs-sm-5'>One World offers the perfect mix of legal assurance, prime location, and growth potential—ideal for both living and investment near Coimbatore’s key hubs.
+                <div className='font-poppins mb-4'><p className='text-center text-md-start fs-sm-5'>One World offers the perfect mix of legal assurance, prime location, and growth potential—ideal for both living and investment near Coimbatore's key hubs.
                 </p></div>
                 <ul className='text-decoration-none'>
                   <div className='d-flex justify-content-center align-items-center'>
@@ -203,7 +206,7 @@ export default function HomePage() {
         <section>
           <TestimonialsCarousel />
         </section>
-       
+
 
 
 
@@ -212,14 +215,18 @@ export default function HomePage() {
           <LeadFormSection />
         </section>
 
-
-
-
-
       </PageWrapper>
 
+      {/* Fixed Mobile Enquiry Button */}
+      <div className="fixed-enquiry-btn d-block d-md-none">
+        <a href="#contactus" className="btn-primary w-100 text-center text-decoration-none">
+          <Icon path={mdiHome} size={1} className="me-2" />
+          ENQUIRE NOW
+        </a>
+      </div>
+
       {/* Footer */}
-      <footer className='bg-blue p-2'>
+      <footer className='bg-blue p-2 pb-5 pb-md-2'>
         <div className='container'>
           <div className='d-flex justify-content-between align-items-center'>
             <div>
@@ -234,6 +241,50 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Add this style tag or add to your globals.css */}
+      <style jsx>{`
+        .fixed-enquiry-btn {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #1b1851;
+          padding: 2px 20px;
+          z-index: 1000;
+          box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+              border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+        }
+        
+        .fixed-enquiry-btn .btn-primary {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 20px;
+          font-size: 16px;
+          font-weight: 600;
+          border: none;
+          border-radius: 5px;
+          background: #007bff;
+          color: white;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+        
+        .fixed-enquiry-btn .btn-primary:hover {
+          background: #0056b3;
+          transform: translateY(-1px);
+          transition: all 0.3s ease;
+        }
+        
+        /* Add bottom padding to body on mobile to prevent content overlap */
+        @media (max-width: 767.98px) {
+          body {
+            padding-bottom: 70px;
+          }
+        }
+      `}</style>
 
     </main>
   );

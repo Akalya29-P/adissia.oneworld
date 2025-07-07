@@ -1,85 +1,90 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+'use client';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+
+const MAX_KM = 10;
+const ROAD_WIDTH = 2400;
+const KM_GAP = ROAD_WIDTH / MAX_KM;
 
 interface LocationData {
   id: number;
-  title: string;
-  subtitle?: string;
+  name: string;
+  subtitle: string;
   distance: string;
-  position: number;
+  km: number;
 }
 
-const LocationPage: React.FC = () => {
-  const [currentLeft, setCurrentLeft] = useState(150);
+export default function LocationTimeline() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const carRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [isMoving, setIsMoving] = useState(false);
-  const navigationAreaRef = useRef<HTMLDivElement>(null);
-  const carContainerRef = useRef<HTMLDivElement>(null);
-  const startXRef = useRef(0);
+  const [carPosition, setCarPosition] = useState(0); // Start at 0km (DRA Polaris position)
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [dragStart, setDragStart] = useState({ x: 0, carPos: 0 });
 
   const locations: LocationData[] = [
-    { id: 1, title: 'Murari Hospital,', subtitle: 'Madhavaram', distance: '1.2 Km', position: 300 },
-    { id: 2, title: 'Bosco Academy', subtitle: 'Matriculation School, Madhavaram', distance: '2.8 Km', position: 500 },
-    { id: 3, title: "St Anthony's", subtitle: 'Hospital, Madhavaram', distance: '4.1 Km', position: 750 },
-    { id: 4, title: 'Vasan Eye Care,', subtitle: 'Madhavaram', distance: '5.9 Km', position: 1000 },
-    { id: 5, title: 'Greenfield Chennai', subtitle: 'International School, Madhavaram', distance: '7.2 Km', position: 1300 },
-    { id: 6, title: 'Metro Station,', subtitle: 'Madhavaram', distance: '8.5 Km', position: 1600 },
-    { id: 7, title: 'City Center Mall,', subtitle: 'Madhavaram', distance: '9.8 Km', position: 1900 },
+    { id: 1, name: 'Murari Hospital', subtitle: 'Madhavaram', distance: '1.2 Km', km: 1.2 },
+    { id: 2, name: 'Bosco Academy', subtitle: 'Matriculation School, Madhavaram', distance: '2.8 Km', km: 2.8 },
+    { id: 3, name: "St Anthony's Hospital", subtitle: 'Madhavaram', distance: '4.1 Km', km: 4.1 },
+    { id: 4, name: 'Vasan Eye Care', subtitle: 'Madhavaram', distance: '5.9 Km', km: 5.9 },
+    { id: 5, name: 'Greenfield Chennai', subtitle: 'International School, Madhavaram', distance: '7.2 Km', km: 7.2 },
+    { id: 6, name: 'Metro Station', subtitle: 'Madhavaram', distance: '8.5 Km', km: 8.5 },
+    { id: 7, name: 'City Center Mall', subtitle: 'Madhavaram', distance: '9.8 Km', km: 9.8 },
   ];
 
-  const calculateDistance = useCallback((left: number) => {
-    const distance = Math.round(((left - 50) / 2150) * 10 * 10) / 10;
-    return Math.max(0.1, distance);
-  }, []);
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      setScrollLeft(scrollRef.current.scrollLeft);
+    }
+  };
 
-  const calculateProgress = useCallback((left: number) => {
-    return Math.max(0, ((left - 50) / 2150) * 100);
-  }, []);
+  const calculateDistance = (position: number) => {
+    const km = (position / ROAD_WIDTH * MAX_KM);
+    return Math.max(0, Math.min(MAX_KM, km)).toFixed(1);
+  };
 
-  const autoScroll = useCallback((left: number) => {
-    if (!navigationAreaRef.current) return;
-
-    const containerScrollLeft = navigationAreaRef.current.scrollLeft;
-    const containerWidth = navigationAreaRef.current.clientWidth;
-
-    if (left > containerScrollLeft + containerWidth - 300) {
-      navigationAreaRef.current.scrollLeft = left - containerWidth + 300;
-    } else if (left < containerScrollLeft + 200) {
-      navigationAreaRef.current.scrollLeft = Math.max(0, left - 200);
+  const autoScroll = useCallback((carPos: number) => {
+    if (!scrollRef.current) return;
+    
+    const container = scrollRef.current;
+    const containerWidth = container.clientWidth;
+    const scrollLeft = container.scrollLeft;
+    const carScreenPos = carPos - scrollLeft;
+    
+    // Auto-scroll when car gets close to edges
+    if (carScreenPos > containerWidth - 200) {
+      container.scrollLeft = carPos - containerWidth + 200;
+    } else if (carScreenPos < 200) {
+      container.scrollLeft = Math.max(0, carPos - 200);
     }
   }, []);
 
   const startDrag = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
     setIsDragging(true);
-    setIsMoving(true);
-
+    
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    startXRef.current = clientX - currentLeft;
+    setDragStart({ x: clientX, carPos: carPosition });
+  }, [carPosition]);
 
-    e.preventDefault();
-  }, [currentLeft]);
-
-  const drag = useCallback((e: MouseEvent | TouchEvent) => {
+  const handleDrag = useCallback((e: MouseEvent | TouchEvent) => {
     if (!isDragging) return;
-
+    
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const newLeft = clientX - startXRef.current;
-    const constrainedLeft = Math.max(50, Math.min(2200, newLeft));
-
-    setCurrentLeft(constrainedLeft);
-    autoScroll(constrainedLeft);
-
-    e.preventDefault();
-  }, [isDragging, autoScroll]);
+    const deltaX = clientX - dragStart.x;
+    const newCarPosition = Math.max(0, Math.min(ROAD_WIDTH + 200, dragStart.carPos + deltaX));
+    
+    setCarPosition(newCarPosition);
+    autoScroll(newCarPosition);
+  }, [isDragging, dragStart, autoScroll]);
 
   const stopDrag = useCallback(() => {
     setIsDragging(false);
-    setTimeout(() => setIsMoving(false), 300);
   }, []);
 
   useEffect(() => {
     if (isDragging) {
-      const handleMouseMove = (e: MouseEvent) => drag(e);
-      const handleTouchMove = (e: TouchEvent) => drag(e);
+      const handleMouseMove = (e: MouseEvent) => handleDrag(e);
+      const handleTouchMove = (e: TouchEvent) => handleDrag(e);
       const handleMouseUp = () => stopDrag();
       const handleTouchEnd = () => stopDrag();
 
@@ -95,141 +100,233 @@ const LocationPage: React.FC = () => {
         document.removeEventListener('touchend', handleTouchEnd);
       };
     }
-  }, [isDragging, drag, stopDrag]);
+  }, [isDragging, handleDrag, stopDrag]);
 
-  const distance = calculateDistance(currentLeft);
-  const progress = calculateProgress(currentLeft);
+  const currentDistance = calculateDistance(carPosition);
 
   return (
-    <div className="">
-      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+    <div className="relative bg-gray-50 py-10">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto px-4 mb-8">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          <span className="text-orange-500">Location</span> Highlights
+        </h1>
+      </div>
+
+      {/* Main Timeline Container */}
+      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        {/* Scrollable container */}
         <div
-          ref={navigationAreaRef}
-          className="relative h-80 bg-white overflow-x-auto overflow-y-hidden border-b border-gray-200"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="relative h-[400px] overflow-x-auto overflow-y-hidden scrollbar-hide"
+          style={{
+            WebkitOverflowScrolling: 'touch',
+          }}
         >
-          <style jsx>{`
-            div::-webkit-scrollbar {
-              display: none;
-            }
-          `}</style>
-
-          <div className="relative h-full w-[2500px] bg-white">
-            <div className="absolute top-8 left-8 bg-white border-2 border-orange-400 rounded-lg px-4 py-2 font-bold text-orange-400 shadow-lg z-50">
-              <span className="text-3xl">{distance}</span>
-              <span className="text-base ml-1">Km</span>
-            </div>
-
-            <div className="absolute top-8 right-8 text-gray-500 text-sm font-medium z-50">
-              DRAG ME
-            </div>
-
-            <div className="absolute bottom-36 left-0 w-full h-0.5 bg-gray-300"></div>
-
-            <div className="absolute bottom-32 left-0 w-full h-5">
-              {locations.map((location) => (
-                <div
-                  key={location.id}
-                  className="absolute w-3 h-3 bg-orange-400 rounded-full border-2 border-white shadow-sm top-1"
-                  style={{ left: `${location.position}px` }}
-                ></div>
-              ))}
-            </div>
-
+          {/* Inner road content */}
+          <div
+            className="relative h-full"
+            style={{ width: `${ROAD_WIDTH + 600}px` }}
+          >
+            {/* Distance Display Above Car */}
             <div
-              ref={carContainerRef}
-              className={`absolute bottom-32 cursor-grab active:cursor-grabbing z-40 transition-transform duration-200 ${
-                isDragging ? 'scale-105' : ''
-              } ${isMoving ? 'animate-bounce' : ''}`}
-              style={{ left: `${currentLeft}px` }}
-              onMouseDown={startDrag}
-              onTouchStart={startDrag}
+              className="absolute z-50 transform -translate-x-1/2"
+              style={{
+                left: `${carPosition + 300}px`,
+                top: '60px',
+              }}
             >
-              <div className="w-24 h-12 relative" style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}>
-                <div className="w-full h-full relative rounded-t-3xl rounded-b-lg" 
-                  style={{
-                    background: 'linear-gradient(145deg, #2c3e50 0%, #34495e 25%, #415971 50%, #34495e 75%, #2c3e50 100%)',
-                    boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.2)'
-                  }}>
-                  
-                  <div className="absolute top-1 left-3 right-3 h-7 rounded-2xl"
-                    style={{ background: 'linear-gradient(145deg, #1a252f 0%, #2c3e50 50%, #1a252f 100%)' }}></div>
-                  
-                  <div className="absolute top-2 left-4 right-4 h-5 rounded-xl border border-white/40"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(173, 216, 230, 0.9) 0%, rgba(135, 206, 235, 0.7) 30%, rgba(176, 224, 230, 0.8) 70%, rgba(173, 216, 230, 0.9) 100%)',
-                      boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.3), 0 1px 3px rgba(0,0,0,0.1)'
-                    }}></div>
-
-                  <div className="absolute top-8 left-2 right-2 h-3 rounded"
-                    style={{ background: 'linear-gradient(145deg, #34495e 0%, #2c3e50 50%, #34495e 100%)' }}></div>
-
-                  <div className="absolute top-7 right-1 w-3 h-2 rounded-full bg-white shadow-sm"
-                    style={{ boxShadow: '0 0 6px rgba(255,255,255,0.8)' }}></div>
-                  <div className="absolute top-7 right-5 w-3 h-2 rounded-full bg-white shadow-sm"
-                    style={{ boxShadow: '0 0 6px rgba(255,255,255,0.8)' }}></div>
-
-                  <div className="absolute top-4 -left-1 w-2 h-1 rounded-sm bg-gray-700"></div>
-                  <div className="absolute top-4 -right-1 w-2 h-1 rounded-sm bg-gray-700"></div>
-
-                  <div className="absolute -bottom-2 right-3 w-4 h-4 rounded-full border-2 border-gray-600"
-                    style={{ background: 'radial-gradient(circle, #333 0%, #1a1a1a 30%, #000 70%, #1a1a1a 100%)' }}>
-                    <div className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full transform -translate-x-1/2 -translate-y-1/2"
-                      style={{ background: 'radial-gradient(circle, #666, #333)' }}></div>
-                  </div>
-                  <div className="absolute -bottom-2 left-3 w-4 h-4 rounded-full border-2 border-gray-600"
-                    style={{ background: 'radial-gradient(circle, #333 0%, #1a1a1a 30%, #000 70%, #1a1a1a 100%)' }}>
-                    <div className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full transform -translate-x-1/2 -translate-y-1/2"
-                      style={{ background: 'radial-gradient(circle, #666, #333)' }}></div>
-                  </div>
-                </div>
+              <div className="bg-orange-500 text-white px-4 py-2 rounded-full font-bold shadow-lg text-lg">
+                {currentDistance} Km
+              </div>
+              <div className="text-center mt-1 text-xs text-gray-500 font-medium">
+                DRAG ME
               </div>
             </div>
 
+            {/* Horizontal Road Line */}
+            <div 
+              className="absolute h-[4px] bg-orange-400 transform -translate-y-1/2"
+              style={{
+                top: '50%',
+                left: '300px',
+                width: `${ROAD_WIDTH}px`
+              }}
+            />
+
+            {/* KM Markers */}
+            {Array.from({ length: MAX_KM }, (_, i) => i + 1).map((km) => (
+              <div
+                key={km}
+                className="absolute flex flex-col items-center transform -translate-x-1/2"
+                style={{
+                  left: `${300 + (km * KM_GAP)}px`,
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              >
+                <div className="w-4 h-4 bg-orange-500 rounded-full border-2 border-white shadow-sm" />
+              </div>
+            ))}
+
+            {/* Location Cards */}
             {locations.map((location) => (
               <div
                 key={location.id}
-                className="absolute bottom-44 bg-white border border-gray-200 rounded-lg p-3 min-w-40 shadow-lg transform -translate-x-1/2"
-                style={{ left: `${location.position}px` }}
+                className="absolute bg-white border border-gray-200 rounded-lg p-3 shadow-lg transform -translate-x-1/2"
+                style={{
+                  left: `${300 + (location.km * KM_GAP)}px`,
+                  top: '280px',
+                  minWidth: '180px',
+                }}
               >
-                <div className="text-sm font-semibold text-gray-800 mb-1 leading-tight">
-                  {location.title}
+                <div className="text-sm font-semibold text-gray-800 mb-1">
+                  {location.name}
                 </div>
-                {location.subtitle && (
-                  <div className="text-xs text-gray-500 mb-2 leading-tight">
-                    {location.subtitle.split(', ').map((part, index) => (
-                      <div key={index}>{part}{index === 0 && location.subtitle!.includes(', ') ? ',' : ''}</div>
-                    ))}
-                  </div>
-                )}
+                <div className="text-xs text-gray-500 mb-2">
+                  {location.subtitle}
+                </div>
                 <div className="text-xs text-gray-500 font-medium">
                   {location.distance}
                 </div>
               </div>
             ))}
 
-            <div className="absolute bottom-10 left-12 flex items-center z-30">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center mr-3 shadow-lg"
-                   style={{ background: 'linear-gradient(135deg, #f39c12, #e67e22)' }}>
-                <span className="text-white font-bold text-lg">P</span>
+            {/* Draggable Car */}
+            <div
+              ref={carRef}
+              className={`absolute z-40 cursor-grab active:cursor-grabbing transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-200 ${
+                isDragging ? 'scale-110' : 'scale-100'
+              }`}
+              style={{
+                left: `${carPosition + 300}px`,
+                top: '50%',
+              }}
+              onMouseDown={startDrag}
+              onTouchStart={startDrag}
+            >
+              <div className="w-20 h-12 relative" style={{ filter: 'drop-shadow(0 8px 25px rgba(0,0,0,0.4))' }}>
+                <svg viewBox="0 0 120 60" className="w-full h-full">
+                  <defs>
+                    <linearGradient id="carBodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#e8e8e8" />
+                      <stop offset="30%" stopColor="#f5f5f5" />
+                      <stop offset="70%" stopColor="#d5d5d5" />
+                      <stop offset="100%" stopColor="#c0c0c0" />
+                    </linearGradient>
+                    <linearGradient id="windowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#4a90e2" />
+                      <stop offset="50%" stopColor="#357abd" />
+                      <stop offset="100%" stopColor="#2c5f8a" />
+                    </linearGradient>
+                    <linearGradient id="wheelGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#2c3e50" />
+                      <stop offset="100%" stopColor="#1a252f" />
+                    </linearGradient>
+                    <radialGradient id="rimGradient" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="#bdc3c7" />
+                      <stop offset="80%" stopColor="#95a5a6" />
+                      <stop offset="100%" stopColor="#7f8c8d" />
+                    </radialGradient>
+                  </defs>
+                  
+                  {/* Car shadow */}
+                  <ellipse cx="60" cy="52" rx="45" ry="3" fill="rgba(0,0,0,0.2)" />
+                  
+                  {/* Car body */}
+                  <path
+                    d="M15 42 Q10 38 15 35 L20 28 Q25 22 35 20 L85 20 Q95 22 100 28 L105 35 Q110 38 105 42 L100 45 L20 45 Z"
+                    fill="url(#carBodyGradient)"
+                    stroke="#a0a0a0"
+                    strokeWidth="0.8"
+                  />
+                  
+                  {/* Front windshield */}
+                  <path
+                    d="M75 23 Q85 23 90 28 L85 32 Q80 28 75 28 Z"
+                    fill="url(#windowGradient)"
+                    opacity="0.8"
+                  />
+                  
+                  {/* Rear windshield */}
+                  <path
+                    d="M45 23 Q35 23 30 28 L35 32 Q40 28 45 28 Z"
+                    fill="url(#windowGradient)"
+                    opacity="0.8"
+                  />
+                  
+                  {/* Side windows */}
+                  <rect x="48" y="25" width="24" height="8" rx="2" fill="url(#windowGradient)" opacity="0.7" />
+                  
+                  {/* Car doors */}
+                  <line x1="60" y1="30" x2="60" y2="40" stroke="#a0a0a0" strokeWidth="1" />
+                  
+                  {/* Front wheel */}
+                  <circle cx="85" cy="45" r="8" fill="url(#wheelGradient)" />
+                  <circle cx="85" cy="45" r="6" fill="url(#rimGradient)" />
+                  <circle cx="85" cy="45" r="3" fill="#ecf0f1" />
+                  
+                  {/* Rear wheel */}
+                  <circle cx="35" cy="45" r="8" fill="url(#wheelGradient)" />
+                  <circle cx="35" cy="45" r="6" fill="url(#rimGradient)" />
+                  <circle cx="35" cy="45" r="3" fill="#ecf0f1" />
+                  
+                  {/* Headlights */}
+                  <ellipse cx="103" cy="35" rx="3" ry="4" fill="#fff" opacity="0.9" />
+                  <ellipse cx="103" cy="35" rx="2" ry="3" fill="#f39c12" opacity="0.7" />
+                  
+                  {/* Taillights */}
+                  <ellipse cx="17" cy="35" rx="2" ry="3" fill="#e74c3c" opacity="0.8" />
+                  
+                  {/* Grille */}
+                  <rect x="98" y="32" width="5" height="6" fill="#34495e" rx="1" />
+                  <rect x="99" y="33" width="3" height="1" fill="#7f8c8d" />
+                  <rect x="99" y="35" width="3" height="1" fill="#7f8c8d" />
+                  <rect x="99" y="37" width="3" height="1" fill="#7f8c8d" />
+                  
+                  {/* Door handles */}
+                  <rect x="50" y="35" width="2" height="3" fill="#7f8c8d" rx="1" />
+                  <rect x="68" y="35" width="2" height="3" fill="#7f8c8d" rx="1" />
+                  
+                  {/* Side mirrors */}
+                  <ellipse cx="25" cy="30" rx="2" ry="1.5" fill="#95a5a6" />
+                  <ellipse cx="95" cy="30" rx="2" ry="1.5" fill="#95a5a6" />
+                  
+                  {/* Antenna */}
+                  <line x1="90" y1="23" x2="90" y2="18" stroke="#7f8c8d" strokeWidth="1" />
+                  
+                  {/* Car badge */}
+                  <rect x="58" y="38" width="4" height="3" fill="#34495e" rx="1" />
+                </svg>
               </div>
-              <div className="text-gray-800 text-2xl font-light tracking-wide">polaris</div>
             </div>
 
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-200">
-              <div 
-                className="h-full transition-all duration-300 ease-out"
-                style={{ 
-                  width: `${progress}%`,
-                  background: 'linear-gradient(90deg, #f39c12, #e67e22)'
-                }}
-              ></div>
+            {/* Polaris logo at start */}
+            <div className="absolute left-8 top-1/2 -translate-y-1/2 flex items-center space-x-3 z-30">
+              <div className="w-16 h-16 rounded-lg flex items-center justify-center shadow-lg"
+                   style={{ background: 'linear-gradient(135deg, #f39c12, #e67e22)' }}>
+                <span className="text-white font-bold text-2xl">P</span>
+              </div>
+              <div className="text-gray-800">
+                <div className="text-xl font-bold">DRA</div>
+                <div className="text-lg font-light">Polaris</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Hide scrollbar styles */}
+      <style jsx global>{`
+        .scrollbar-hide {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
-};
-
-export default LocationPage;
+}

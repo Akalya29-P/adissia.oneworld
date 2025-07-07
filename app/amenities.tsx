@@ -10,20 +10,24 @@ import PageWrapper from './pagewrapper';
 
 const amenities = [
   {
-    title: 'Yoga Area',
-    img: '/image/yoga-area.jpg',
+    title: 'Kids Play Zone',
+    img: '/image/kidsplay-zone.jpg',
   },
   {
-    title: 'Club House',
-    img: '/image/club-house.jpg',
+    title: 'Turf',
+    img: '/image/turf.jpg',
   },
   {
-    title: 'Swimming Pool',
-    img: '/image/swimming-pool.jpg',
+    title: 'Outdoor Fitness',
+    img: '/image/outdoor-fitness.jpg',
   },
   {
-    title: 'Amphitheatre',
-    img: '/image/amphitheatre.jpg',
+    title: 'Basket Ball Court',
+    img: '/image/basket-ball.jpg',
+  },
+  {
+    title: 'Pickle Ball Court',
+    img: '/image/pickle-ball.jpg',
   },
 ];
 

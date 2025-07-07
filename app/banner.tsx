@@ -25,97 +25,115 @@ export default function Banner() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!formData.name || !formData.email || !formData.phone || !formData.project || !formData.consent) {
-    alert('Please fill in all fields and provide consent.');
-    return;
-  }
+    if (!formData.name || !formData.email || !formData.phone || !formData.project || !formData.consent) {
+      alert('Please fill in all fields and provide consent.');
+      return;
+    }
 
-  setStatus('loading');
+    setStatus('loading');
 
-  try {
-    const response = await fetch('/api/lead', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        project: formData.project,
-      }),
-    });
+    try {
+      const response = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          project: formData.project,
+        }),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    // Handle different HTTP status codes
-    if (response.ok) {
-      if (result.status === 'success') {
-        setStatus('success');
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          project: '',
-          consent: false,
-        });
+      // Handle different HTTP status codes
+      if (response.ok) {
+        if (result.status === 'success') {
+          setStatus('success');
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            project: '',
+            consent: false,
+          });
+        } else {
+          setStatus('error');
+        }
+      } else if (response.status === 409) {
+        // Handle 409 Conflict specifically - duplicate submission
+        console.log('409 Conflict detected:', result);
+        setStatus('duplicate');
+      } else if (response.status === 400) {
+        // Handle validation errors
+        console.log('400 Bad Request:', result);
+        setStatus('error');
+      } else if (response.status === 500) {
+        // Handle server errors
+        console.log('500 Server Error:', result);
+        setStatus('error');
       } else {
+        // Handle any other errors
+        console.log('Other error:', response.status, result);
         setStatus('error');
       }
-    } else if (response.status === 409) {
-      // Handle 409 Conflict specifically - duplicate submission
-      console.log('409 Conflict detected:', result);
-      setStatus('duplicate');
-    } else if (response.status === 400) {
-      // Handle validation errors
-      console.log('400 Bad Request:', result);
-      setStatus('error');
-    } else if (response.status === 500) {
-      // Handle server errors
-      console.log('500 Server Error:', result);
-      setStatus('error');
-    } else {
-      // Handle any other errors
-      console.log('Other error:', response.status, result);
+    } catch (error) {
+      console.error('Lead submission failed:', error);
       setStatus('error');
     }
-  } catch (error) {
-    console.error('Lead submission failed:', error);
-    setStatus('error');
-  }
-};
+  };
   return (
-    <section className="position-relative overflow-hidden" id='contactus'>
+    <section className="position-relative overflow-hidden" id="contactus">
       {/* Banner background */}
       <div className="banner-bg position-relative">
         <div className="position-absolute top-0 start-0 w-100 h-100 overlay"></div>
+
+        {/* Left banner content area */}
         <div className="container text-white py-5" style={{ position: 'relative', zIndex: 2 }}>
           <div className="row align-items-center">
             <div className="col-12 col-lg-7">
-             
+              {/* Optional text or image here */}
             </div>
           </div>
         </div>
 
-        {/* Desktop form - absolute positioned */}
-        <div className="desktop-form d-none d-lg-block">
+        {/* Desktop form - with logo outside */}
+        <div className="desktop-form d-none d-lg-block text-center">
+          {/* ✅ Logo above the form */}
+          <img
+            src="./image/white-logo.png"
+            alt="Logo"
+            className="img-fluid mb-3 jsx-741775bb41ad9fb0 img-fluid mb-3 mx-auto"
+            style={{ maxWidth: '160px' }}
+          />
           <div className="bg-white p-4 shadow rounded">
-            <h5 className="mb-3 text-center text-dark font-poppins">Enquire Now</h5>
+            <h5 className="mb-3 text-dark font-poppins">Enquire Now</h5>
             <Form handleChange={handleChange} handleSubmit={handleSubmit} formData={formData} status={status} />
           </div>
         </div>
       </div>
 
-      {/* Mobile form below banner */}
-      <div className="container d-lg-none mt-4 px-3">
+      {/* Mobile form below banner with logo above */}
+      <div className="container d-lg-none mt-4 px-3 text-center">
+        {/* ✅ Logo above the mobile form */}
+        <img
+          src="./image/white-logo.png"
+          alt="Logo"
+          className="img-fluid mb-3 mx-auto d-none d-md-block"
+          style={{
+            maxWidth: '160px',
+          }}
+        />
         <div className="bg-white p-4 shadow rounded">
-          <h5 className="mb-3 text-center text-dark font-poppins">Enquire Now</h5>
+          <h5 className="mb-3 text-dark font-poppins">Enquire Now</h5>
           <Form handleChange={handleChange} handleSubmit={handleSubmit} formData={formData} status={status} />
         </div>
       </div>
 
       {/* Styles */}
-      <style jsx>{`
+     <style jsx>{`
         .banner-bg {
           min-height: 75vh;
           background-image: url('/banners/banner-hero.webp');
@@ -152,7 +170,9 @@ export default function Banner() {
           }
         }
       `}</style>
+
     </section>
+
   );
 }
 
